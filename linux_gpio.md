@@ -47,7 +47,8 @@ ioctl(fd, GPIO_GET_LINEEVENT_IOCTL, struct gpioevent_request &req);
 |__u32 eventflags;|監視するGPIOの状態の変化の指定|
 |char consumer_label\[GPIO_MAX_NAME_SIZE\];|GPIOラインにつける名前|
 |int fd;|GPIOラインの初期化が完了したときに発行されるファイルハンドル<br>0または負の値のときはエラー|
-|__u32 handleflags|説明|
+
+|handleflagsで代入できる定数|説明|
 |-|-|
 |#define GPIOEVENT_REQUEST_RISING_EDGE|GPIOがLow->Highの変化をしたとき反応する|
 |#define GPIOEVENT_REQUEST_FALLING_EDGE|GPIOがHigh->Lowの変化をしたとき反応する|
