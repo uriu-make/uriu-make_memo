@@ -4,12 +4,17 @@
 #include <fcntl.h>
 #include <sys/ioctl.h>
 ```
-の3種類が最低でも必要
+の3種類が最低限必要
 ## 初期化
 ```
 int fd = open("/dev/gpiochip*", O_RDWR);
 ```
 /dev/gpiochip*をO_RDWRで開く。戻り値はファイルハンドル
+### 入出力モードの設定
+```
+ioctl(int fd, GPIO_GET_LINEHANDLE_IOCTL, struct gpiohandle_request &req);
+```
+ここでの`fd`は/dev/gpiochip*を開いたときに発行されるファイルハンドル
 |struct gpiohandle_requestのメンバ変数|使用するGPIOの初期設定|
 |-|-|
 |__u32 lineoffsets\[GPIOHANDLES_MAX\];|使用するGPIOのBNCコードを代入する<br>複数ピンをまとめて設定可能|
@@ -18,9 +23,7 @@ int fd = open("/dev/gpiochip*", O_RDWR);
 |char consumer_label\[GPIO_MAX_NAME_SIZE\];|GPIOラインにつける名前|
 |__u32 lines;|GPIOラインで使用する入出力の数|
 |int fd;|GPIOラインの初期化が完了したときに発行されるファイルハンドル<br>0または負の値のときはエラー|
-```
-ioctl(int fd, GPIO_GET_LINEHANDLE_IOCTL, struct *gpiohandle_request);
-```
+
 |flagsで代入できる定数|説明|
 |---|---|
 |#define GPIOHANDLE_REQUEST_INPUT|GPIOを入力モードに設定|
@@ -31,13 +34,21 @@ ioctl(int fd, GPIO_GET_LINEHANDLE_IOCTL, struct *gpiohandle_request);
 |#define GPIOHANDLE_REQUEST_BIAS_PULL_UP|プルアップ|
 |#define GPIOHANDLE_REQUEST_BIAS_PULL_DOWN|プルダウン|
 |#define GPIOHANDLE_REQUEST_BIAS_DISABLE|未検証|
+### イベントの設定
+GPIOピンの状態の変化を検出する設定
+```
+ioctl(fd, GPIO_GET_LINEEVENT_IOCTL, struct gpioevent_request &event);
+```
+ここでの`fd`は/dev/gpiochip*を開いたときに発行されるファイルハンドル
+|||
+|-|-|
 ## 入出力
 ```
 //output
-ioctl(int fd, GPIOHANDLE_SET_LINE_VALUES_IOCTL, struct *gpiohandle_data);
+ioctl(int fd, GPIOHANDLE_SET_LINE_VALUES_IOCTL, struct gpiohandle_data *value);
 
 //input
-ioctl(int fd, GPIOHANDLE_GET_LINE_VALUES_IOCTL, struct *gpiohandle_data);
+ioctl(int fd, GPIOHANDLE_GET_LINE_VALUES_IOCTL, struct *gpiohandle_data *value);
 ```
 ここでの`int fd`はGPIOの初期化で発行されたgpiohandle_requestのメンバ変数fdの値
 |struct gpiohandle_dataのメンバ変数|GPIOの情報を扱うハンドル|
