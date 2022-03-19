@@ -1,0 +1,45 @@
+読み込むライブラリは
+```
+#include <linux/gpio.h>
+#include <fcntl.h>
+#include <sys/ioctl.h>
+```
+の3種類が最低でも必要
+## 初期化
+```
+int fd = open("/dev/gpiochip*", O_RDWR);
+```
+/dev/gpiochip*をO_RDWRで開く。戻り値はファイルハンドル
+|struct gpiohandle_requestのメンバ変数|使用するGPIOの初期設定|
+|-|-|
+|__u32 lineoffsets\[GPIOHANDLES_MAX\];|使用するGPIOのBNCコードを代入する<br>複数ピンをまとめて設定可能|
+|__u32 flags;|GPIOの入出力モードを設定<br>下記参照|
+|__u8 default_values\[GPIOHANDLES_MAX\];|GPIOを出力に設定したときの初期値<br>複数をまとめて操作している場合は`lineoffsets`に代入した順|
+|char consumer_label\[GPIO_MAX_NAME_SIZE\];|GPIOラインにつける名前|
+|__u32 lines;|GPIOラインで使用する入出力の数|
+|int fd;|GPIOラインの初期化が完了したときに発行されるファイルハンドル<br>0または負の値のときはエラー|
+```
+ioctl(int fd, GPIO_GET_LINEHANDLE_IOCTL, struct *gpiohandle_request);
+```
+|flagsで代入できる定数|説明|
+|---|---|
+|#define GPIOHANDLE_REQUEST_INPUT|GPIOを入力モードに設定|
+|#define GPIOHANDLE_REQUEST_OUTPUT|GPIOを出力モードに設定|
+|#define GPIOHANDLE_REQUEST_ACTIVE_LOW|未検証|
+|#define GPIOHANDLE_REQUEST_OPEN_DRAIN|未検証|
+|#define GPIOHANDLE_REQUEST_OPEN_SOURCE|未検証|
+|#define GPIOHANDLE_REQUEST_BIAS_PULL_UP|プルアップ|
+|#define GPIOHANDLE_REQUEST_BIAS_PULL_DOWN|プルダウン|
+|#define GPIOHANDLE_REQUEST_BIAS_DISABLE|未検証|
+## 入出力
+```
+//output
+ioctl(int fd, GPIOHANDLE_SET_LINE_VALUES_IOCTL, struct *gpiohandle_data);
+
+//input
+ioctl(int fd, GPIOHANDLE_GET_LINE_VALUES_IOCTL, struct *gpiohandle_data);
+```
+ここでの`int fd`はGPIOの初期化で発行されたgpiohandle_requestのメンバ変数fdの値
+|struct gpiohandle_dataのメンバ変数|GPIOの情報を扱うハンドル|
+|-|-|
+|__u8 values\[GPIOHANDLES_MAX\]|GPIOの値<br>出力は変数への代入、入力は変数の読み取りで扱える。<br>複数をまとめて操作している場合は`lineoffsets`に代入した順|

@@ -1,0 +1,30 @@
+{
+  // See https://go.microsoft.com/fwlink/?LinkId=733558
+  // for the documentation about the tasks.json format
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "dvipdfmx",
+      "type": "shell",
+      "command": "dvipdfmx",
+      "args": [
+        "-f",
+        "yu-win10.map",
+        "${fileBasenameNoExtension}",
+        "-S",
+        "-P",
+        "0x0804",
+        "-K",
+        "128"
+      ],
+      "options": {
+        "cwd": "${fileDirname}"
+      },
+      "problemMatcher": [],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    }
+  ]
+}
