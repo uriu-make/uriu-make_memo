@@ -31,12 +31,12 @@ ioctl(fd, GPIO_GET_LINEHANDLE_IOCTL, &request);
 |---|---|
 |#define GPIOHANDLE_REQUEST_INPUT|GPIOを入力モードに設定|
 |#define GPIOHANDLE_REQUEST_OUTPUT|GPIOを出力モードに設定|
-|#define GPIOHANDLE_REQUEST_ACTIVE_LOW|未検証|
+|#define GPIOHANDLE_REQUEST_ACTIVE_LOW|LOWをアクティブな状態にする|
 |#define GPIOHANDLE_REQUEST_OPEN_DRAIN|未検証|
 |#define GPIOHANDLE_REQUEST_OPEN_SOURCE|未検証|
 |#define GPIOHANDLE_REQUEST_BIAS_PULL_UP|プルアップ|
 |#define GPIOHANDLE_REQUEST_BIAS_PULL_DOWN|プルダウン|
-|#define GPIOHANDLE_REQUEST_BIAS_DISABLE|未検証|
+|#define GPIOHANDLE_REQUEST_BIAS_DISABLE|バイアスを有効にしない|
 ### イベントの設定
 GPIOピンの状態の変化を検出する設定
 ```
