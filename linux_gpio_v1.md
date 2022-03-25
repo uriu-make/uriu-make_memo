@@ -18,11 +18,9 @@ int fd = open("/dev/gpiochipN", O_RDWR);
 struct gpiohandle_request request;
 ioctl(fd, GPIO_GET_LINEHANDLE_IOCTL, &request);
 ```
-ここでの`fd`は/dev/gpiochipNを開いたときに発行されるファイルハンドル
-
 |struct gpiohandle_requestのメンバ変数|使用するGPIOの初期設定|
 |-|-|
-|__u32 lineoffsets\[GPIOHANDLES_MAX\];|使用するGPIOのBCM番号を代入する<br>複数ピンをまとめて設定可能|
+|__u32 lineoffsets\[GPIOHANDLES_MAX\];|使用するGPIOのピン番号を代入する<br>複数ピンをまとめて設定可能|
 |__u32 flags;|GPIOの入出力モードを設定<br>下記参照|
 |__u8 default_values\[GPIOHANDLES_MAX\];|GPIOを出力に設定したときの初期値<br>複数をまとめて操作している場合は`lineoffsets`に代入した順|
 |char consumer_label\[GPIO_MAX_NAME_SIZE\];|GPIOラインにつける名前|
@@ -45,10 +43,9 @@ GPIOピンの状態の変化を検出する設定
 struct gpioevent_request &event_request;
 ioctl(fd, GPIO_GET_LINEEVENT_IOCTL, &event_request);
 ```
-ここでの`fd`は/dev/gpiochipNを開いたときに発行されるファイルハンドル
 |struct gpioevent_requestのメンバ変数|説明|
 |-|-|
-|__u32 lineoffset;|使用するGPIOのBCM番号を代入|
+|__u32 lineoffset;|使用するGPIOのピン番号を代入|
 |__u32 handleflags;|GPIOラインのハンドルフラグを指定|
 |__u32 eventflags;|監視するGPIOの状態の変化の指定|
 |char consumer_label\[GPIO_MAX_NAME_SIZE\];|GPIOラインにつける名前|
@@ -68,7 +65,6 @@ ioctl(request.fd, GPIOHANDLE_SET_LINE_VALUES_IOCTL, &value);
 //input
 ioctl(request.fd, GPIOHANDLE_GET_LINE_VALUES_IOCTL, &value);
 ```
-ここでの`int fd`はGPIOの初期化で発行されたgpiohandle_requestのメンバ変数fdの値
 |struct gpiohandle_dataのメンバ変数|GPIOの情報を扱うハンドル|
 |-|-|
 |__u8 values\[GPIOHANDLES_MAX\]|GPIOの値<br>出力は変数への代入、入力は変数の読み取りで扱える。<br>複数をまとめて操作している場合は`lineoffsets`に代入した順|
@@ -77,7 +73,6 @@ ioctl(request.fd, GPIOHANDLE_GET_LINE_VALUES_IOCTL, &value);
 struct gpioevent_data event_data;
 read(event_request.fd, &event_data, sizeof(event_data));
 ```
-ここでの`fd`はイベントの設定で発行されるgpioevent_requestのメンバ変数fdの値
 |struct gpioevent_dataのメンバ変数|説明|
 |-|-|
 |__u64 timestamp;|発生したイベントの最も近いと推測される時間(ナノ秒)|
