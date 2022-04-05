@@ -1,7 +1,7 @@
 ここでは、C/C++で/dev/gpiochipNからアクセスしてGPIOを操作する方法について書きます。\
 Linux 4.8以降では/sys/class/gpioを使用したアクセスは推奨されていません。\
 ここでの方法はABI v2の一部で、環境によっては動作しない場合が考えられます。\
-読み込むライブラリは
+読み込むヘッダファイルは
 ```
 #include <linux/gpio.h>
 #include <fcntl.h>
