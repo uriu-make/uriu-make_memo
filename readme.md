@@ -3,3 +3,4 @@
 
 * [LinuxのGPIOの扱い方(ABI v1)](linux_gpio_v1.md)
 * [LinuxのGPIOの扱い方(ABI v2)](linux_gpio_v2.md)
+* [LinuxのI2Cの扱い方(ABI v2)](linux_i2c.md)

@@ -23,7 +23,7 @@ read(device_fd, data, sizeof(data));
 write(device_fd, data, sizeof(data));
 ```
 でも動作します。
-### 双方向通信等
+### 双方向通信など
 Repeated Start Conditionを使用した通信は以下の方法で行います。
 ```
 struct i2c_msg args[2];
@@ -43,9 +43,20 @@ args[1].buf = data;
 message.msgs = args;
 message.nmsgs = 2;
 
-ioctl(device_fd, I2C_RDWR, &message);
+ioctl(fd, I2C_RDWR, &message);
 ```
 Repeated Start ConditionはStopコンディションの代わりにStartコンディションにすることで、再度通信を行う方法。\
 Stopコンディションが入ると受信した値を維持しないデバイスなどで通信を終了することなく送信/受信を切り替えたい場合やマルチマスタで通信の中断を防ぐために使う。
 |struct i2c_msgのメンバ変数|説明|
 |-|-|
+|__u16 addr;|スレーブデバイスのアドレス|
+|__u16 flags;|読み込み/書き込みなどのモードの設定|
+|__u16 len;|データのバイト数|
+|__u8 *buf;|送受信するデータの配列|
+
+flagsに0を代入した場合は書き込みの動作になり、I2C_M_RDを代入した場合は読み取りの動作になる。
+
+|struct i2c_rdwr_ioctl_dataのメンバ変数|説明|
+|-|-|
+|struct i2c_msg *msgs;|struct i2c_msgのポインタ|
+|__u32 nmsgs;|struct i2c_msgの要素数|
