@@ -5,14 +5,13 @@ I2Cを扱うために必要なヘッダファイルは以下の４つです。
 #include <fcntl.h>
 #include <sys/ioctl.h>
 ```
-
+/dev/i2c-1をO_RDWR(読み書き両用)で開く。戻り値はファイルディスクリプタ\
+開くファイル名は使用するI2Cラインに対応したものを選択する必要があります。
 ```
 __u16 address = 0x3c;
 int fd = open("/dev/i2c-1", O_RDWR);
 int device_fd = ioctl(fd, I2C_SLAVE, address);
 ```
-/dev/i2c-1をO_RDWRで開く。戻り値はファイルディスクリプタ\
-開くファイル名は使用するI2Cラインに対応したものを選択する必要があります。
 ### 単方向通信
 書き込み/読み込みのみの場合は
 ```

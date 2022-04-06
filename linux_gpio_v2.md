@@ -12,7 +12,7 @@ Linux 4.8以降では/sys/class/gpioを使用したアクセスは推奨され�
 ```
 int fd = open("/dev/gpiochipN", O_RDWR);
 ```
-/dev/gpiochipNをO_RDWRで開く。戻り値はファイルハンドル
+/dev/gpiochipNをO_RDWR(読み書き両用)で開く。戻り値はファイルハンドル
 ### 入出力モードの設定
 ```
 struct gpio_v2_line_request request;
