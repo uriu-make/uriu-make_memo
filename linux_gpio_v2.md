@@ -66,7 +66,7 @@ ioctl(fd, GPIO_V2_GET_LINE_IOCTL, &request);
 |-|-|
 |GPIO_V2_LINE_ATTR_ID_FLAGS|GPIOラインのフラグを設定|
 |GPIO_V2_LINE_ATTR_ID_OUTPUT_VALUES|GPIOラインのビットマップを設定|
-|GPIO_V2_LINE_ATTR_ID_DEBOUNCE|でバウンスの時間を設定|
+|GPIO_V2_LINE_ATTR_ID_DEBOUNCE|デバウンスの時間を設定|
 
 ## 入出力
 ``````
