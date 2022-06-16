@@ -15,8 +15,8 @@ int fd = open("/dev/gpiochipN", O_RDWR);
 /dev/gpiochipNをO_RDWR(読み書き両用)で開く。戻り値はファイルハンドル
 ### 入出力モードの設定
 ```
-struct gpio_v2_line_request request;
-ioctl(fd, GPIO_V2_GET_LINE_IOCTL, &request);
+struct gpio_v2_line_request req;
+ioctl(fd, GPIO_V2_GET_LINE_IOCTL, &req);
 ```
 |struct gpio_v2_line_requestのメンバ変数|説明|
 |-|-|
@@ -100,3 +100,11 @@ read(req.fd, &event, sizeof(event));
 |-|-|
 |GPIO_V2_LINE_EVENT_RISING_EDGE|非アクティブ->アクティブの変化|
 |GPIO_V2_LINE_EVENT_FALLING_EDGE|アクティブ->非アクティブの変化|
+
+## 入出力モードの再設定
+```
+struct gpio_v2_line_config config;
+ioctl(req.fd, GPIO_V2_LINE_SET_CONFIG_IOCTL, &config);
+```
+GPIOラインの入出力、イベント検出の設定を上書きする。\
+ピンは追加されない
