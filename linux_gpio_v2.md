@@ -76,7 +76,7 @@ ioctl(req.fd, GPIO_V2_LINE_SET_VALUES_IOCTL, &values);
 //入力
 ioctl(req.fd, GPIO_V2_LINE_GET_VALUES_IOCTL, &values);
 ``````
-value.maskに入力をを含んだ状態で出力を行った場合、出力されません。
+value.maskに入力を含んだ状態で出力を行った場合、出力されません。
 | struct gpio_v2_line_valuesのメンバ変数 | 説明                                                    |
 | -------------------------------------- | ------------------------------------------------------- |
 | __aligned_u64 bits;                    | GPIOラインのビットマップ。アクティブは1,非アクティブは0 |
