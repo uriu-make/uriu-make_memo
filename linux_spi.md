@@ -34,7 +34,7 @@ ioctl(fd, SPI_IOC_WR_BITS_PER_WORD, &bits_par_word);
 ## 送受信
 ```
 struct spi_ioc_transfer arg[N];
-ioctl(spi_fd, SPI_IOC_MESSAGE(N), arg);
+ioctl(fd, SPI_IOC_MESSAGE(N), arg);
 ```
 Nは転送するstruct spi_ioc_transferの数。\
 0の場合は設定は変更されない。
