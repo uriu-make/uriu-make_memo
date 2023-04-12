@@ -1,16 +1,16 @@
 SPIを扱うために必要なヘッダファイルは以下の3つです。
-```
+~~~cpp
 #include <linux/spi/spidev.h>
 #include <fcntl.h>
 #include <sys/ioctl.h>
-```
+~~~
 /dev/spidev0.0をO_RDWR(読み書き両用)で開く。戻り値はファイルディスクリプタ\
 ファイル名は操作するSPIバスに一致するものを選択
-```
+~~~cpp
 int fd = open("/dev/spidev0.0", O_RDWR);
-```
+~~~
 ## SPIの設定
-```
+~~~cpp
 //SPIのモードを設定
 __u8 mode = SPI_MODE_1;
 iocrl(fd, SPI_IOC_WR_MODE, &mode);
@@ -30,12 +30,12 @@ ioctl(fd, SPI_IOC_RD_LSB_FIRST, &lsb_first);
 __u8 bits_par_word = 8;
 ioctl(fd, SPI_IOC_RD_BITS_PER_WORD, &bits_par_word);
 ioctl(fd, SPI_IOC_WR_BITS_PER_WORD, &bits_par_word);
-```
+~~~
 ## 送受信
-```
+~~~cpp
 struct spi_ioc_transfer arg[N];
 ioctl(fd, SPI_IOC_MESSAGE(N), arg);
-```
+~~~
 Nは転送するstruct spi_ioc_transferの数。\
 0の場合は設定は変更されない。
 | spi_ioc_transferのメンバ変数 | 説明                                                                                           |

@@ -2,22 +2,22 @@
 Linux 4.8以降では/sys/class/gpioを使用したアクセスは推奨されていません。\
 ここでの方法はABI v2の一部で、環境によっては動作しない場合が考えられます。\
 読み込むヘッダファイルは
-```
+~~~cpp
 #include <linux/gpio.h>
 #include <fcntl.h>
 #include <sys/ioctl.h>
-```
+~~~
 の3種類が最低限必要です。
 ## 初期化
-```
+~~~cpp
 int fd = open("/dev/gpiochipN", O_RDWR);
-```
+~~~
 /dev/gpiochipNをO_RDWR(読み書き両用)で開く。戻り値はファイルハンドル
 ### 入出力モードの設定
-```
+~~~cpp
 struct gpio_v2_line_request req;
 ioctl(fd, GPIO_V2_GET_LINE_IOCTL, &req);
-```
+~~~
 | struct gpio_v2_line_requestのメンバ変数 | 説明                                                                                                                                                                                                                                                                                                                |
 | --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | __u32 fd;                               | 成功したとき、GPIOラインのハンドルが代入される。0か負の数のときは失敗                                                                                                                                                                                                                                               |
@@ -69,13 +69,13 @@ ioctl(fd, GPIO_V2_GET_LINE_IOCTL, &req);
 | GPIO_V2_LINE_ATTR_ID_DEBOUNCE      | デバウンスの時間を設定         |
 
 ## 入出力
-``````
+~~~cpp
 struct gpio_v2_line_values values;
 //出力
 ioctl(req.fd, GPIO_V2_LINE_SET_VALUES_IOCTL, &values);
 //入力
 ioctl(req.fd, GPIO_V2_LINE_GET_VALUES_IOCTL, &values);
-``````
+~~~
 value.maskに入力を含んだ状態で出力を行った場合、出力されません。
 | struct gpio_v2_line_valuesのメンバ変数 | 説明                                                    |
 | -------------------------------------- | ------------------------------------------------------- |
@@ -83,10 +83,10 @@ value.maskに入力を含んだ状態で出力を行った場合、出力され�
 | __aligned_u64 mask;                    | 取得または設定する行を識別するビットマップ              |
 
 ## イベントの検出
-```
+~~~cpp
 struct gpio_v2_line_event event;
 read(req.fd, &event, sizeof(event));
-```
+~~~
 | struct gpio_v2_line_eventのメンバ変数 | 説明                                                                                         |
 | ------------------------------------- | -------------------------------------------------------------------------------------------- |
 | __aligned_u64 timestamp_ns;           | イベント発生時間の最適な見積もり(ナノ秒)<br>CLOCK_MONOTONICが読み取られる。                  |
@@ -102,9 +102,9 @@ read(req.fd, &event, sizeof(event));
 | GPIO_V2_LINE_EVENT_FALLING_EDGE    | アクティブ->非アクティブの変化 |
 
 ## 入出力モードの再設定
-```
+~~~cpp
 struct gpio_v2_line_config config;
 ioctl(req.fd, GPIO_V2_LINE_SET_CONFIG_IOCTL, &config);
-```
+~~~
 GPIOラインの入出力、イベント検出の設定を上書きする。\
 ピンは追加されない

@@ -1,30 +1,30 @@
 I2Cを扱うために必要なヘッダファイルは以下の４つです。
-```
+~~~cpp
 #include <linux/i2c-dev.h>
 #include <linux/i2c.h>
 #include <fcntl.h>
 #include <sys/ioctl.h>
-```
+~~~
 /dev/i2c-1をO_RDWR(読み書き両用)で開く。戻り値はファイルディスクリプタ\
 開くファイル名は使用するI2Cラインに対応したものを選択する必要があります。
-```
+~~~cpp
 __u16 address = 0x3c;
 int fd = open("/dev/i2c-1", O_RDWR);
 int device_fd = ioctl(fd, I2C_SLAVE, address);
-```
+~~~
 ### 単方向通信
 書き込み/読み込みのみの場合は
-```
+~~~cpp
 char data[2]:
 //読み込み
 read(device_fd, data, sizeof(data));
 //書き込み
 write(device_fd, data, sizeof(data));
-```
+~~~
 でも動作します。
 ### 双方向通信など
 Repeated Start Conditionを使用した通信は以下の方法で行います。
-```
+~~~cpp
 struct i2c_msg args[2];
 struct i2c_rdwr_ioctl_data message;
 __u8 reg = 0x00;
@@ -43,7 +43,7 @@ message.msgs = args;
 message.nmsgs = 2;
 
 ioctl(fd, I2C_RDWR, &message);
-```
+~~~
 Repeated Start ConditionはStopコンディションの代わりにStartコンディションにすることで、再度通信を行う方法。\
 Stopコンディションが入ると受信した値を維持しないデバイスなどで通信を終了することなく送信/受信を切り替えたい場合やマルチマスタで通信の中断を防ぐために使われます。
 | struct i2c_msgのメンバ変数 | 説明                                |

@@ -2,22 +2,22 @@
 Linux 4.8以降では/sys/class/gpioを使用したアクセスは推奨されていません。\
 また、ここでの方法はABI v1の一部であり、ABI v2が使用可能な環境の場合、非推奨です。\
 読み込むヘッダーファイルは
-```
+~~~cpp
 #include <linux/gpio.h>
 #include <fcntl.h>
 #include <sys/ioctl.h>
-```
+~~~
 の3種類が最低限必要です。
 ## 初期化
-```
+~~~cpp
 int fd = open("/dev/gpiochipN", O_RDWR);
-```
+~~~
 /dev/gpiochipNをO_RDWR(読み書き両用)で開く。戻り値はファイルハンドル
 ### 入出力モードの設定
-```
+~~~cpp
 struct gpiohandle_request request;
 ioctl(fd, GPIO_GET_LINEHANDLE_IOCTL, &request);
-```
+~~~
 | struct gpiohandle_requestのメンバ変数      | 使用するGPIOの初期設定                                                                        |
 | ------------------------------------------ | --------------------------------------------------------------------------------------------- |
 | __u32 lineoffsets\[GPIOHANDLES_MAX\];      | 使用するGPIOのピン番号を代入する<br>複数ピンをまとめて設定可能                                |
@@ -39,10 +39,10 @@ ioctl(fd, GPIO_GET_LINEHANDLE_IOCTL, &request);
 | #define GPIOHANDLE_REQUEST_BIAS_DISABLE   | バイアスを有効にしない      |
 ### イベントの設定
 GPIOピンの状態の変化を検出する設定
-```
+~~~cpp
 struct gpioevent_request &event_request;
 ioctl(fd, GPIO_GET_LINEEVENT_IOCTL, &event_request);
-```
+~~~
 | struct gpioevent_requestのメンバ変数       | 説明                                                                                        |
 | ------------------------------------------ | ------------------------------------------------------------------------------------------- |
 | __u32 lineoffset;                          | 使用するGPIOのピン番号を代入                                                                |
@@ -57,22 +57,22 @@ ioctl(fd, GPIO_GET_LINEEVENT_IOCTL, &event_request);
 | #define GPIOEVENT_REQUEST_FALLING_EDGE | GPIOがHigh->Lowの変化をしたとき反応する        |
 | #define GPIOEVENT_REQUEST_BOTH_EDGES   | GPIOがLow->High、High->Lowのどちらでも反応する |
 ## 入出力
-```
+~~~cpp
 struct gpiohandle_data value;
 //output
 ioctl(request.fd, GPIOHANDLE_SET_LINE_VALUES_IOCTL, &value);
 
 //input
 ioctl(request.fd, GPIOHANDLE_GET_LINE_VALUES_IOCTL, &value);
-```
+~~~
 | struct gpiohandle_dataのメンバ変数 | GPIOの情報を扱うハンドル                                                                                                    |
 | ---------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
 | __u8 values\[GPIOHANDLES_MAX\]     | GPIOの値<br>出力は変数への代入、入力は変数の読み取りで扱える。<br>複数をまとめて操作している場合は`lineoffsets`に代入した順 |
 ## イベントの検出
-```
+~~~cpp
 struct gpioevent_data event_data;
 read(event_request.fd, &event_data, sizeof(event_data));
-```
+~~~
 | struct gpioevent_dataのメンバ変数 | 説明                                               |
 | --------------------------------- | -------------------------------------------------- |
 | __u64 timestamp;                  | 発生したイベントの最も近いと推測される時間(ナノ秒) |
